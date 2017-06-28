@@ -18,7 +18,15 @@ package com.example.android.didyoufeelit;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.style.UpdateLayout;
+import android.util.Log;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+
+import static com.example.android.didyoufeelit.Utils.LOG_TAG;
 
 /**
  * Displays the perceived strength of a single earthquake event based on responses from people who
@@ -36,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Perform the HTTP request for earthquake data and process the response.
-        Event earthquake = Utils.fetchEarthquakeData(USGS_REQUEST_URL);
+        //Event earthquake = Utils.fetchEarthquakeData(USGS_REQUEST_URL);
 
         // Update the information displayed to the user.
-        updateUi(earthquake);
+        NetworkAsyncTask task = new NetworkAsyncTask();
+        task.execute(USGS_REQUEST_URL);
     }
 
     /**
@@ -56,35 +65,18 @@ public class MainActivity extends AppCompatActivity {
         magnitudeTextView.setText(earthquake.perceivedStrength);
     }
 
-    public class NetworkAsyncTask extends AsyncTask(String, Void, String){
+    private class NetworkAsyncTask extends AsyncTask(String, Void, String){
 
         @Override
-        protected String doInBackground(String... params) {
-            for(int i=0;i<5;i++) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        protected String doInBackground(String... Urls) {
+            // Perform the HTTP request for earthquake data and process the response.
+            Event result = Utils.fetchEarthquakeData(Urls[0]);
+            return result;
+
             }
-            TextView txt = (TextView) findViewById(R.id.output);
-            txt.setText("Executed");
-            return null;
-        }
-
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Event result) {
+            UpdateUi(result);
         }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
-
-
     }
 }
