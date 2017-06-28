@@ -18,6 +18,7 @@ package com.example.android.didyoufeelit;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -57,15 +58,16 @@ public class MainActivity extends AppCompatActivity {
         magnitudeTextView.setText(earthquake.perceivedStrength);
     }
 
-    private class NetworkAsyncTask extends AsyncTask<String, Void, String>{
+    private class NetworkAsyncTask extends AsyncTask<String, Void, Event>{
 
         @Override
         protected Event doInBackground(String... Urls) {
             // Perform the HTTP request for earthquake data and process the response.
             Event result = Utils.fetchEarthquakeData(Urls[0]);
+            Log.i("MainActivity", "doInBackground: " + result);
             return result;
-
             }
+
         @Override
         protected void onPostExecute(Event result) {
             updateUi(result);
