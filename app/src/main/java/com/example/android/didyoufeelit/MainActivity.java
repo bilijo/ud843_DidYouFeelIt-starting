@@ -18,15 +18,7 @@ package com.example.android.didyoufeelit;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.style.UpdateLayout;
-import android.util.Log;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-
-import static com.example.android.didyoufeelit.Utils.LOG_TAG;
 
 /**
  * Displays the perceived strength of a single earthquake event based on responses from people who
@@ -54,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Update the UI with the given earthquake information.
      */
-    private void updateUi(Event earthquake) {
+    public void updateUi(Event earthquake) {
         TextView titleTextView = (TextView) findViewById(R.id.title);
         titleTextView.setText(earthquake.title);
 
@@ -65,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
         magnitudeTextView.setText(earthquake.perceivedStrength);
     }
 
-    private class NetworkAsyncTask extends AsyncTask(String, Void, String){
+    private class NetworkAsyncTask extends AsyncTask<String, Void, String>{
 
         @Override
-        protected String doInBackground(String... Urls) {
+        protected Event doInBackground(String... Urls) {
             // Perform the HTTP request for earthquake data and process the response.
             Event result = Utils.fetchEarthquakeData(Urls[0]);
             return result;
@@ -76,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         @Override
         protected void onPostExecute(Event result) {
-            UpdateUi(result);
+            updateUi(result);
         }
     }
 }
